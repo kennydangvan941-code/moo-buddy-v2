@@ -1,0 +1,6 @@
+@MooBuddy.Api_HostAddress = http://localhost:5276
+
+GET {{MooBuddy.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
