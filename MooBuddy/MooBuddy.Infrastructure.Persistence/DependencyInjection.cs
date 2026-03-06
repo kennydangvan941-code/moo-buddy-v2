@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MooBuddy.Application.Common.Interfaces;
 using MooBuddy.Infrastructure.Persistence.Contexts;
+using MooBuddy.Infrastructure.Persistence.Repositories;
 
 namespace MooBuddy.Infrastructure.Persistence
 {
@@ -14,8 +16,10 @@ namespace MooBuddy.Infrastructure.Persistence
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
                 .UseSnakeCaseNamingConvention());
 
-            // 2. Đăng ký các Repository hoặc Service hạ tầng khác
-            // services.AddScoped<IEmailService, EmailService>();
+            // 2. Đăng ký các Repository
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IFamilyRepository, FamilyRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

@@ -1,13 +1,25 @@
 using Microsoft.EntityFrameworkCore;
+using MooBuddy.Application.Common.Interfaces;
 using MooBuddy.Domain.Entities;
 using MooBuddy.Infrastructure.Persistence.Contexts;
+using System.Linq.Expressions;
 
 namespace MooBuddy.Infrastructure.Persistence.Repositories
 {
-    public class UserRepository : BaseRepository<User>
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
         public UserRepository(MooBuddyDbContext context) : base(context)
         {
+        }
+
+        public async Task<bool> AnyAsync(Expression<Func<User, bool>> predicate)
+        {
+            return await _dbSet.AnyAsync(predicate);
+        }
+
+        public void Add(User user)
+        {
+            _dbSet.Add(user);
         }
 
         public async Task<User?> FindByEmailAsync(string email)

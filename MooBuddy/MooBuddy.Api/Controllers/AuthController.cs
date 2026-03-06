@@ -1,4 +1,3 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using MooBuddy.Application.Features.Auth.RegisterWithEmail;
 
@@ -8,12 +7,17 @@ namespace MooBuddy.Api.Controllers
     [Route("api/auth")]
     public class AuthController : Controller
     {
-        [HttpPost("register-email")]
-        public async Task<IActionResult> RegisterEmail(
-        [FromBody] RegisterRequest req,
-        [FromServices] RegisterWithEmailExecution execution)
+        private readonly RegisterWithEmailExecution _execution;
+
+        public AuthController(RegisterWithEmailExecution execution)
         {
-            var result = await execution.ExecuteAsync(req.Email, req.Password, req.FullName);
+            _execution = execution;
+        }
+
+        [HttpPost("register-email")]
+        public async Task<IActionResult> RegisterEmail([FromBody] RegisterWithEmailRequest req)
+        {
+            var result = await _execution.ExecuteAsync(req.Email, req.Password, req.FullName);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }
