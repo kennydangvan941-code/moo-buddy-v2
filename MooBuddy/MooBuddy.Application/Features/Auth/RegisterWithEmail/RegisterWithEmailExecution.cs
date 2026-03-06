@@ -4,11 +4,11 @@ using MooBuddy.Domain.Entities;
 
 namespace MooBuddy.Application.Features.Auth.RegisterWithEmail
 {
-    public class RegisterWithEmailExecution
+    public class RegisterWithEmailUseCase
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterWithEmailExecution(IUnitOfWork unitOfWork)
+        public RegisterWithEmailUseCase(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
