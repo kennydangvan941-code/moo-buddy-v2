@@ -1,0 +1,8 @@
+namespace MooBuddy.Application.UseCases.Auth.LoginWithEmail.DTOs
+{
+    public class LoginWithEmailRequest
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}
