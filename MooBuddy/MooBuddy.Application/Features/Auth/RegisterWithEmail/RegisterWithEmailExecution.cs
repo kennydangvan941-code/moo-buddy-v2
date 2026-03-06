@@ -1,44 +1,44 @@
-﻿using MooBuddy.Infrastructure.Persistence.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MooBuddy.Application.Common.Interfaces;
+using MooBuddy.Application.Common.Models;
+using MooBuddy.Domain.Entities;
 
 namespace MooBuddy.Application.Features.Auth.RegisterWithEmail
 {
     public class RegisterWithEmailExecution
     {
-        private readonly MooBuddyDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterWithEmailExecution(IMooBuddyDbContext context)
+        public RegisterWithEmailExecution(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<AuthResponse>> ExecuteAsync(string email, string password, string name)
+        public async Task<Result<RegisterWithEmailResponse>> ExecuteAsync(string email, string password, string name)
         {
             // 1. Check trùng
-            if (await _context.Users.AnyAsync(u => u.Email == email))
-                return Result<AuthResponse>.Failure("Email đã tồn tại.");
+            if (await _unitOfWork.Users.AnyAsync(u => u.Email == email))
+                return Result<RegisterWithEmailResponse>.Failure("Email đã tồn tại.");
 
             // 2. Tạo dữ liệu
-            var family = new Family { Id = Guid.NewGuid(), FamilyCode = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper() };
+            var family = new Family
+            {
+                Id = Guid.NewGuid(),
+                FamilyCode = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper()
+            };
             var user = new User
             {
                 Id = Guid.NewGuid(),
                 Email = email,
                 FullName = name,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-                Provider = "Email",
                 Family = family
             };
 
-            _context.Families.Add(family);
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            _unitOfWork.Families.Add(family);
+            _unitOfWork.Users.Add(user);
+            await _unitOfWork.SaveChangesAsync();
 
-            return Result<AuthResponse>.Success(new AuthResponse
+            return Result<RegisterWithEmailResponse>.Success(new RegisterWithEmailResponse
             {
                 Token = "FAKE_TOKEN",
                 FamilyCode = family.FamilyCode

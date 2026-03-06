@@ -1,4 +1,4 @@
-namespace MooBuddy.Application.Features.Auth.RegisterWithEmail
+namespace MooBuddy.Application.UseCases.Auth.RegisterWithEmail.DTOs
 {
     public class RegisterWithEmailResponse
     {

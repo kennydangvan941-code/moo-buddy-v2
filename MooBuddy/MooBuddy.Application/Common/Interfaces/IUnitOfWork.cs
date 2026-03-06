@@ -1,9 +1,9 @@
-using MooBuddy.Domain.Entities;
-
 namespace MooBuddy.Application.Common.Interfaces
 {
-    public interface IMooBuddyDbContext
+    public interface IUnitOfWork : IDisposable
     {
+        IUserRepository Users { get; }
+        IFamilyRepository Families { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }
