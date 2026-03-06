@@ -14,10 +14,10 @@ namespace MooBuddy.Application.UseCases.Auth.RegisterWithEmail
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<RegisterWithEmailResponse>> ExecuteAsync(string email, string password, string name)
+        public async Task<Result<RegisterWithEmailResponse>> ExecuteAsync(RegisterWithEmailRequest request)
         {
             // 1. Check trùng
-            if (await _unitOfWork.Users.AnyAsync(u => u.Email == email))
+            if (await _unitOfWork.Users.AnyAsync(u => u.Email == request.Email))
                 return Result<RegisterWithEmailResponse>.Failure("Email đã tồn tại.");
 
             // 2. Tạo dữ liệu
@@ -29,9 +29,9 @@ namespace MooBuddy.Application.UseCases.Auth.RegisterWithEmail
             var user = new User
             {
                 Id = Guid.NewGuid(),
-                Email = email,
-                FullName = name,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+                Email = request.Email,
+                FullName = request.FullName,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Family = family
             };
 
